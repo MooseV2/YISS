@@ -143,7 +143,7 @@ def load_result(uuid, img_file):
     model_ip = ip_dict[uuid]
     model_endpoint = "{}:5001/get_prediction".format(model_ip)
 
-    r = requests.post(model_endpoint, files={'file': img_file})
+    r = requests.post(model_endpoint, files={'file': img_file}).text
 
     return (name, desc, r)
 
