@@ -14,7 +14,13 @@ FlaskUUID(app)
 
 
 docker_client = docker.from_env()
-ip_dict = {}
+
+ip_dict = None
+if os.path.isfile('proxy.p'):
+    with open('proxy.p', 'rb') as proxy_file:
+        ip_dict = pickle.load(proxy_file)
+else:
+    ip_dict = {}
 
 
 @app.route('/')
@@ -131,6 +137,9 @@ def upload():
     ip = ip.decode('utf-8').rstrip()
     print(ip)
     ip_dict[uuid] = ip
+
+    with open("proxy.p", 'wb') as _proxy_file:
+        pickle.dump(ip_dict, _proxy_file)
 
     # TODO: Instantiate model container
     return redirect(url_for('index'))
