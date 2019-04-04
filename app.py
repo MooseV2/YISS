@@ -16,6 +16,7 @@ def index():
 
     return render_template('index.html', gallery=model_info)
 
+
 @app.route('/model/<uuid>')
 def model(uuid):
     """

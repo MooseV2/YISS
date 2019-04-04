@@ -8,7 +8,7 @@
     <div class="ui container vertical center aligned segment masthead fluid inverted">
       <div class="ui text container">
         <h1 class="ui header inverted">YISS</h1>
-        <h2 class="ui header inverted">Your Inference Served as a Service</h2><a class="ui huge primary button">Upload your Onnx model&nbsp;&nbsp;&nbsp;<i class="cloud upload icon"></i></a>
+        <h2 class="ui header inverted">Your Inference Served as a Service</h2><a class="ui huge primary button" href="/upload">Upload your Onnx model&nbsp;&nbsp;&nbsp;<i class="cloud upload icon"></i></a>
       </div>
     </div>
     <div class="ui vertical stripe segment">
@@ -39,7 +39,7 @@
         <h4 class="ui horizontal divider header">Gallery       </h4>
         <div class="ui four cards">{% for uuid, name in gallery.items() %}
           <div class="card">
-            <div class="image"><img src="/images/thumb-{{ uuid }}"></div>
+            <div class="image"><img src="/images/thumb-{{ uuid }}.jpg"></div>
             <div class="content"><a class="header" href="/model/{{ uuid }}/">{{ name }}</a></div>
           </div>{% endfor %}
         </div>

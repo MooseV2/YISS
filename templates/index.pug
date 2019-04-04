@@ -9,7 +9,7 @@ html
             .ui.text.container
                 h1.ui.header.inverted YISS
                 h2.ui.header.inverted Your Inference Served as a Service
-                a.ui.huge.primary.button Upload your Onnx model&nbsp;&nbsp;&nbsp;
+                a(href="/upload").ui.huge.primary.button Upload your Onnx model&nbsp;&nbsp;&nbsp;
                     i.cloud.upload.icon
         .ui.vertical.stripe.segment
             .ui.aligned.stackable.grid.container
@@ -35,7 +35,7 @@ html
                     |{% for uuid, name in gallery.items() %}
                     .card
                         .image
-                            img(src='/images/thumb-{{ uuid }}')
+                            img(src='/images/thumb-{{ uuid }}.jpg')
                         .content
                             a.header(href="/model/{{ uuid }}/") {{ name }}
                     |{% endfor %}
