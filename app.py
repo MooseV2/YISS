@@ -9,10 +9,6 @@ import docker
 import glob # TODO: Remove after proper gallery retreival
 import subprocess
 import requests
-import docker
-import glob # TODO: Remove after proper gallery retreival
-import subprocess
-
 
 app = Flask(__name__)
 FlaskUUID(app)
@@ -49,18 +45,28 @@ def model(uuid):
     uuid = str(uuid)
     url = "138.197.172.21/models"
     # try:
-    name, desc, output = load_result(uuid, request.files['file'])
+    post = request.method == 'POST'
+
+    if post:
+        img_file = request.files['file']
+    else:
+        img_file = None
+    
+    name, desc, output = load_result(uuid, post, img_file=img_file)
     # except: # UUID wasn't found, throw 404
     #     return '404 :('
     #     # TODO: 404.html
     #     # return render_template('404.html')
 
-    return render_template('model.html', 
-                            url=url,
-                            name=name, 
-                            description=desc, 
-                            output=output, 
-                            uuid=uuid)
+    if not post:
+        return render_template('model.html', 
+                                url=url,
+                                name=name, 
+                                description=desc, 
+                                output=output, 
+                                uuid=uuid)
+    else:
+        return output
 
 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -130,7 +136,7 @@ def upload():
     # TODO: Instantiate model container
     return redirect(url_for('index'))
 
-def load_result(uuid, img_file):
+def load_result(uuid, post, img_file=None):
     """ Given a UUID, returns the corresponding result JSON.
         Returns: JSON on success, None on failure
     """
@@ -138,7 +144,10 @@ def load_result(uuid, img_file):
         model = db[uuid]
         name = model["name"]
         desc = model["description"]
-        output = "test"
+        demo = model["demo"]
+
+    if not post:
+        img_file = open(demo, "rb")
 
     model_ip = ip_dict[uuid]
     model_endpoint = "{}:5001/get_prediction".format(model_ip)
