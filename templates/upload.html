@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <title>YISS - Upload A Model</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+  <link rel="stylesheet" href="{{ url_for('static',filename='index.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+  <body>
+    <div class="ui container vertical center aligned segment shorthead fluid inverted">
+      <div class="ui text container">
+        <h1 class="ui header inverted">YISS</h1>
+        <h2 class="ui header inverted">Your Inference Served as a Service</h2>
+      </div>
+    </div><br>
+    <form class="ui text container" method="post" enctype="multipart/form-data" id="content-form">
+      <div class="ui segments raised">
+        <div class="ui raised segment">
+          <div class="ui label orange big ribbon">Step 1</div>
+          <div class="ui placeholder segment">
+            <div class="ui icon header"><i class="cog icon"></i>
+              <h2 id="onnx-name">No Onnx models present</h2>
+            </div>
+            <label class="ui primary button" for="file-onnx">Select an Onnx model</label>
+            <input class="hidden" type="file" name="onnx" id="file-onnx">
+          </div>
+        </div>
+        <div class="ui raised segment">
+          <div class="ui label orange big right ribbon">Step 2</div>
+          <div class="ui form">
+            <div class="field">
+              <label>Model Name</label>
+              <input type="text" placeholder="Name" name="name" id="name">
+            </div>
+            <div class="field">
+              <label>Model Description</label>
+              <textarea name="description" id="descriptions"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="ui raised segment">
+          <div class="ui label big orange ribbon">Step 3</div>
+          <div class="ui form">
+            <div class="field">
+              <label>Label Names</label>
+              <textarea name="labels" id="labels"></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="ui raised segment">
+          <div class="ui label big orange right ribbon">Step 4</div>
+          <h4>Images</h4>
+          <div class="ui two columns grid">
+            <div class="column">
+              <div class="ui segment placeholder">
+                <div class="ui icon header huge"><i class="image icon circular inverted grey"></i>
+                  <h2 id="thumb-name"></h2>
+                </div>
+                <label class="ui primary button" for="file-thumbnail">Select a thumbnail</label>
+                <input class="hidden" type="file" name="thumbnail" id="file-thumbnail">
+              </div>
+            </div>
+            <div class="column">
+              <div class="ui segment placeholder">
+                <div class="ui icon header huge"><i class="image icon circular inverted grey"></i>
+                  <h2 id="demo-name"></h2>
+                </div>
+                <label class="ui primary button" for="file-demo">Select a demo image</label>
+                <input class="hidden" type="file" name="demo" id="file-demo">
+              </div>
+            </div>
+          </div>
+        </div><br>
+        <label class="ui botton attached primary button rounded huge" for="do-submit">Submit</label>
+        <input class="hidden" type="submit" id="do-submit">
+      </div>
+      <div class="ui message">
+        <div class="content">
+          <div class="header">Once you submit this form you will be redirected to the model page</div>
+        </div>
+      </div>
+    </form>
+  </body>
+  <script src="{{ url_for('static',filename='upload.js') }}"></script>
+</html>

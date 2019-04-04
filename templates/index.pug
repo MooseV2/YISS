@@ -1,0 +1,43 @@
+doctype html
+html
+    title YISS
+    link(rel='stylesheet' href='https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css')
+    link(rel='stylesheet' href='{{ url_for(\'static\',filename=\'index.css\') }}')
+    script(src='https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js')
+    body
+        .ui.container.vertical.center.aligned.segment.masthead.fluid.inverted
+            .ui.text.container
+                h1.ui.header.inverted YISS
+                h2.ui.header.inverted Your Inference Served as a Service
+                a.ui.huge.primary.button Upload your Onnx model&nbsp;&nbsp;&nbsp;
+                    i.cloud.upload.icon
+        .ui.vertical.stripe.segment
+            .ui.aligned.stackable.grid.container
+                .row
+                    .ten.wide.column
+                        .ui.stacked.segments
+                            .ui.segment
+                                h4.ui.header Step 1
+                                p Upload your Onnx model by clicking the button above
+                            .ui.segment
+                                h4.ui.header Step 2
+                                p Fill in your details on the submission form
+                            .ui.segment
+                                h4.ui.header Step 3
+                                p YISS will automatically serve your model and create an API
+                            .ui.segment
+                                h4.ui.header Step 4
+                                p YISS will also create a landing page to demo your model
+                    .six.wide.column
+                        img(src='https://placeimg.com/640/480/any')
+                h4.ui.horizontal.divider.header Gallery       
+                .ui.four.cards
+                    |{% for name, uuid in gallery.items() %}
+                    .card
+                        .image
+                            img(src='/images/thumb-{{ uuid }}')
+                        .content
+                            a.header(href="/model/{{ uuid }}/") {{name}}
+                    |{% endfor %}
+
+

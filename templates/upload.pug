@@ -1,0 +1,67 @@
+doctype html
+html
+    title YISS - Upload A Model
+    link(rel='stylesheet' href='https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css')
+    link(rel='stylesheet' href='{{ url_for(\'static\',filename=\'index.css\') }}')
+    script(src='https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js')
+    body
+        .ui.container.vertical.center.aligned.segment.shorthead.fluid.inverted
+            .ui.text.container
+                h1.ui.header.inverted YISS
+                h2.ui.header.inverted Your Inference Served as a Service
+        br
+        form(method="post" enctype="multipart/form-data")#content-form.ui.text.container
+            .ui.segments.raised
+                .ui.raised.segment
+                    .ui.label.orange.big.ribbon
+                        | Step 1
+                    .ui.placeholder.segment
+                        .ui.icon.header
+                            i.cog.icon
+                            h2#onnx-name No Onnx models present
+                        label(for="file-onnx").ui.primary.button Select an Onnx model
+                        input(type="file" name="onnx" id="file-onnx").hidden
+                .ui.raised.segment
+                    .ui.label.orange.big.right.ribbon
+                        | Step 2
+                    .ui.form
+                        .field
+                            label Model Name
+                            input(type="text" placeholder="Name" name="name")#name
+                        .field
+                            label Model Description
+                            textarea(name="description")#descriptions
+                .ui.raised.segment
+                    .ui.label.big.orange.ribbon
+                        | Step 3
+                    .ui.form
+                        .field
+                            label Label Names
+                            textarea(name="labels")#labels
+                .ui.raised.segment
+                    .ui.label.big.orange.right.ribbon
+                        | Step 4
+                    h4 Images
+                    .ui.two.columns.grid
+                        .column
+                            .ui.segment.placeholder
+                                .ui.icon.header.huge
+                                    i.image.icon.circular.inverted.grey
+                                    h2#thumb-name
+                                label(for="file-thumbnail").ui.primary.button Select a thumbnail
+                                input(type="file" name="thumbnail" id="file-thumbnail").hidden
+                        .column
+                            .ui.segment.placeholder
+                                .ui.icon.header.huge
+                                    i.image.icon.circular.inverted.grey
+                                    h2#demo-name
+                                label(for="file-demo").ui.primary.button Select a demo image
+                                input(type="file" name="demo" id="file-demo").hidden
+                br
+                label(for="do-submit").ui.botton.attached.primary.button.rounded.huge Submit
+                input(type="submit")#do-submit.hidden
+            .ui.message
+                .content
+                    .header
+                        | Once you submit this form you will be redirected to the model page
+    script(src='{{ url_for(\'static\',filename=\'upload.js\') }}')

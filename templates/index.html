@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <title>YISS</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+  <link rel="stylesheet" href="{{ url_for('static',filename='index.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+  <body>
+    <div class="ui container vertical center aligned segment masthead fluid inverted">
+      <div class="ui text container">
+        <h1 class="ui header inverted">YISS</h1>
+        <h2 class="ui header inverted">Your Inference Served as a Service</h2><a class="ui huge primary button">Upload your Onnx model&nbsp;&nbsp;&nbsp;<i class="cloud upload icon"></i></a>
+      </div>
+    </div>
+    <div class="ui vertical stripe segment">
+      <div class="ui aligned stackable grid container">
+        <div class="row">
+          <div class="ten wide column">
+            <div class="ui stacked segments">
+              <div class="ui segment">
+                <h4 class="ui header">Step 1</h4>
+                <p>Upload your Onnx model by clicking the button above</p>
+              </div>
+              <div class="ui segment">
+                <h4 class="ui header">Step 2</h4>
+                <p>Fill in your details on the submission form</p>
+              </div>
+              <div class="ui segment">
+                <h4 class="ui header">Step 3</h4>
+                <p>YISS will automatically serve your model and create an API</p>
+              </div>
+              <div class="ui segment">
+                <h4 class="ui header">Step 4</h4>
+                <p>YISS will also create a landing page to demo your model</p>
+              </div>
+            </div>
+          </div>
+          <div class="six wide column"><img src="https://placeimg.com/640/480/any"></div>
+        </div>
+        <h4 class="ui horizontal divider header">Gallery       </h4>
+        <div class="ui four cards">{% for name, uuid in gallery.items() %}
+          <div class="card">
+            <div class="image"><img src="/images/thumb-{{ uuid }}"></div>
+            <div class="content"><a class="header" href="/model/{{ uuid }}/">{{name}}</a></div>
+          </div>{% endfor %}
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
