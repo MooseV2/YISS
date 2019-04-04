@@ -43,7 +43,7 @@ def model(uuid):
     :return: model.html template, or 404.html on error
     """
     uuid = str(uuid)
-    url = "138.197.172.21/models"
+    url = "localhost/models"
     # try:
     post = request.method == 'POST'
 
@@ -140,6 +140,10 @@ def load_result(uuid, post, img_file=None):
     """ Given a UUID, returns the corresponding result JSON.
         Returns: JSON on success, None on failure
     """
+
+    if type(uuid) is bytes:
+        uuid = uuid.decode('utf-8')
+        
     with shelve.open("persistent_data") as db:
         model = db[uuid]
         name = model["name"]
@@ -150,9 +154,11 @@ def load_result(uuid, post, img_file=None):
         img_file = open(demo, "rb")
 
     model_ip = ip_dict[uuid]
-    model_endpoint = "{}:5001/get_prediction".format(model_ip)
+    model_endpoint = "http://{}:5001/get_prediction".format(model_ip[1:-1])
+    print(model_endpoint)
 
     r = requests.post(model_endpoint, files={'file': img_file}).text
+    print(r)
 
     return (name, desc, r)
 
