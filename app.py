@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, send_from_directory
+from flask import Flask, render_template, request, send_from_directory, redirect, url_for
 import os
 from uuid import uuid4
 import pickle
@@ -8,6 +8,7 @@ from flask_uuid import FlaskUUID
 import glob # TODO: Remove after proper gallery retreival
 app = Flask(__name__)
 FlaskUUID(app)
+
 
 @app.route('/')
 def index():
@@ -101,22 +102,7 @@ def upload():
         pickle.dump(label_list, label_file)
     
     # TODO: Instantiate model container
-    return f"""
-        UUID:\t{uuid}
-        <br>Thumbnail:\t{thumb_path}
-        <br>Demo:\t{demo_path}
-        <br>Model:\t{model_path}
-        <br>Name:\t{name}
-        <br>
-        <br>-------
-        <br>Labels
-        <br>-------
-        <br>{labels}
-        <br>-------
-        <br>Description
-        <br>-------
-        <br>{desc}
-    """
+    return redirect(url_for('index'))
 
 def load_result(uuid):
     """ Given a UUID, returns the corresponding result JSON.

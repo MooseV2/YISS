@@ -68,7 +68,11 @@ def get_prediction():
 
     pred = sess.run([label_name], {input_name: img_array})[0]
     print(pred.shape)
-    print(pred.argmax(axis=1)[0])
+    index = pred.argmax(axis=1)[0]
+    try:
+        return labels[index]
+    except IndexError:
+        return "Unknown"
 
 
     return ""
