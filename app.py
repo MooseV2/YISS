@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request
 import os
 from uuid import uuid4
+import pickle
 from threading import Thread
 import glob # TODO: Remove after proper gallery retreival
 app = Flask(__name__)
@@ -73,6 +74,12 @@ def upload():
     os.mkdir(model_dir)
     model_path = os.path.join(model_dir, 'model.onnx')
     onnx.save(model_path)
+
+    label_path = os.path.join(model_dir, 'label.p')
+    label_list = labels.split(', ')
+
+    with open(label_path, 'wb') as label_file:
+        pickle.dump(label_list, label_file)
     
     # TODO: Instantiate model container
     return f"""

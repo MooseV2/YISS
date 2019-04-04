@@ -2,10 +2,14 @@ import onnxruntime as rt
 from PIL import Image
 from flask import Flask, request, Response
 import numpy as np
+import pickle
 
 app = Flask(__name__)
 
-sess = rt.InferenceSession("../models/emotion_ferplus/model.onnx")
+sess = rt.InferenceSession("/home/model/model.onnx")
+
+with open("/home/model/labels.p", "rb") as f:
+    labels = pickle.load(f)
 
 input_shape = sess.get_inputs()[0].shape[1:]
 output_shape = sess.get_outputs()[0].shape[-1]

@@ -26,7 +26,8 @@ RUN pip install -r /tmp/requirements.txt
 COPY include/modelserver.py /home/modelserver.py
 
 ARG model
-COPY models/$model/* /home/model/
+COPY models/$model/model.onnx /home/model/model.onnx
+COPY models/$model/label.p /home/model/labels.p
 
 ENTRYPOINT ["/tini", "--"]
 CMD ["python", "/home/modelserver.py"]
