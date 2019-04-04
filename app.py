@@ -33,7 +33,7 @@ def model(uuid):
     :return: model.html template, or 404.html on error
     """
     uuid = str(uuid)
-    url = "localhost:5000/models"
+    url = "138.197.172.21/models"
     try:
         name, desc, output = load_result(uuid)
     except: # UUID wasn't found, throw 404
