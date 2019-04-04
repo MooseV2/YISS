@@ -1,14 +1,13 @@
-from flask import Flask, render_template, request, send_from_directory, redirect, url_for
 import os
-from uuid import uuid4
 import pickle
-from threading import Thread
 import shelve
-from flask_uuid import FlaskUUID
-import docker
-import glob # TODO: Remove after proper gallery retreival
 import subprocess
+from uuid import uuid4
+
+import docker
 import requests
+from flask import Flask, render_template, request, send_from_directory, redirect, url_for
+from flask_uuid import FlaskUUID
 
 app = Flask(__name__)
 FlaskUUID(app)
@@ -17,8 +16,6 @@ FlaskUUID(app)
 docker_client = docker.from_env()
 ip_dict = {}
 
-docker_client = docker.from_env()
-ip_dict = {}
 
 @app.route('/')
 def index():
@@ -31,9 +28,11 @@ def index():
 
     return render_template('index.html', gallery=model_info)
 
+
 @app.route('/images/<path:path>')
 def send_image(path):
     return send_from_directory('images', path)
+
 
 @app.route('/models/<uuid>/', methods=['GET', 'POST'])
 def model(uuid):
@@ -136,6 +135,7 @@ def upload():
     # TODO: Instantiate model container
     return redirect(url_for('index'))
 
+
 def load_result(uuid, post, img_file=None):
     """ Given a UUID, returns the corresponding result JSON.
         Returns: JSON on success, None on failure
@@ -163,6 +163,7 @@ def load_result(uuid, post, img_file=None):
     return (name, desc, r)
 
     # TODO
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000) # Start the server

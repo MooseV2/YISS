@@ -1,8 +1,9 @@
+import pickle
+
+import numpy as np
 import onnxruntime as rt
 from PIL import Image
-from flask import Flask, request, Response
-import numpy as np
-import pickle
+from flask import Flask, request
 
 app = Flask(__name__)
 
