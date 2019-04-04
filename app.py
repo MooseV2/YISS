@@ -9,10 +9,17 @@ import docker
 import glob # TODO: Remove after proper gallery retreival
 import subprocess
 import requests
+import docker
+import glob # TODO: Remove after proper gallery retreival
+import subprocess
+
 
 app = Flask(__name__)
 FlaskUUID(app)
 
+
+docker_client = docker.from_env()
+ip_dict = {}
 
 docker_client = docker.from_env()
 ip_dict = {}
@@ -119,7 +126,6 @@ def upload():
 
     ip = ip.decode('utf-8').rstrip()
     print(ip)
-
     ip_dict[uuid] = ip
 
     # TODO: Instantiate model container
