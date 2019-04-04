@@ -5,7 +5,7 @@ import numpy as np
 
 app = Flask(__name__)
 
-sess = rt.InferenceSession("../models/emotion_ferplus/model.onnx")
+sess = rt.InferenceSession("../models/vgg19/model.onnx")
 
 input_shape = sess.get_inputs()[0].shape[1:]
 output_shape = sess.get_outputs()[0].shape[-1]
@@ -17,6 +17,9 @@ def preprocess_img(image):
         img = image.convert("L")
     elif input_shape[0] == 3:
         img = image.convert("RGB")
+
+        b, g, r = img.split()
+        img = Image.merge("RGB", (r, g, b))
     else:
         raise AttributeError("Invalid number of image channels for model input layer")
 
@@ -31,6 +34,8 @@ def preprocess_img(image):
     if input_shape[0] == 1:
         img_array /= 255
     elif input_shape[0] == 3:
+        # img_array = img_array[::-1, ...]
+
         mean = [103.939, 116.779, 123.68]
 
         img_array[0, :, :] -= mean[0]
