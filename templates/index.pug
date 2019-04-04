@@ -29,15 +29,15 @@ html
                                 h4.ui.header Step 4
                                 p YISS will also create a landing page to demo your model
                     .six.wide.column
-                        img(src='https://placeimg.com/640/480/any')
+                        img(src='{{ url_for(\'static\',filename=\'yiss.jpg\') }}')
                 h4.ui.horizontal.divider.header Gallery       
                 .ui.four.cards
-                    |{% for name, uuid in gallery.items() %}
+                    |{% for uuid, name in gallery.items() %}
                     .card
                         .image
                             img(src='/images/thumb-{{ uuid }}')
                         .content
-                            a.header(href="/model/{{ uuid }}/") {{name}}
+                            a.header(href="/model/{{ uuid }}/") {{ name }}
                     |{% endfor %}
 
 

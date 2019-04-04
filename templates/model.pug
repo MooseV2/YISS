@@ -1,0 +1,45 @@
+doctype html
+html
+    title YISS - {{ name }}
+    link(rel='stylesheet' href='https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css')
+    link(rel='stylesheet' href='{{ url_for(\'static\',filename=\'index.css\') }}')
+    script(src='https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js')
+    body
+        .ui.container.vertical.center.aligned.segment.shorthead.fluid.inverted
+            .ui.text.container
+                h1.ui.header.inverted YISS Model Page
+                h2.ui.header.inverted {{ name }}
+        br
+        .ui.text.container
+            .ui.segments.raised
+                .ui.raised.segment
+                    .ui.label.orange.big.ribbon
+                        | Model Info
+                    h2 {{ name }}
+                    .ui.message {{ description }}
+                .ui.raised.segment
+                    .ui.label.orange.big.ribbon
+                        | Example
+                    br
+                    br
+                    .ui.two.columns.grid
+                        .column
+                            .ui.segment
+                                .header
+                                    h3 Input
+                                img(src="{{ url_for(\'images\',filename=\'demo-{{ uuid }}.jpg\') }}" width="100%")
+                        .column
+                            .ui.segment
+                                .header
+                                    h3 Output
+                                .message {{ output }}
+                .ui.raised.segment
+                    .ui.label.orange.big.ribbon
+                        | API Call
+                    br
+                    br
+                    p Simply send a POST request to this URL
+                    .ui.message
+                        | curl -F "file=@arst.jpg" http://localhost:5000/models/{{ uuid }}
+                br
+                br
