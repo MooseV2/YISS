@@ -5,10 +5,24 @@ import pickle
 from threading import Thread
 import shelve
 from flask_uuid import FlaskUUID
+import docker
 import glob # TODO: Remove after proper gallery retreival
+import subprocess
+import requests
+import docker
+import glob # TODO: Remove after proper gallery retreival
+import subprocess
+
+
 app = Flask(__name__)
 FlaskUUID(app)
 
+
+docker_client = docker.from_env()
+ip_dict = {}
+
+docker_client = docker.from_env()
+ip_dict = {}
 
 @app.route('/')
 def index():
@@ -25,7 +39,7 @@ def index():
 def send_image(path):
     return send_from_directory('images', path)
 
-@app.route('/models/<uuid>/')
+@app.route('/models/<uuid>/', methods=['GET', 'POST'])
 def model(uuid):
     """
     Renders the results page with the analysis JSON data
@@ -34,12 +48,12 @@ def model(uuid):
     """
     uuid = str(uuid)
     url = "138.197.172.21/models"
-    try:
-        name, desc, output = load_result(uuid)
-    except: # UUID wasn't found, throw 404
-        return '404 :('
-        # TODO: 404.html
-        # return render_template('404.html')
+    # try:
+    name, desc, output = load_result(uuid, request.files['file'])
+    # except: # UUID wasn't found, throw 404
+    #     return '404 :('
+    #     # TODO: 404.html
+    #     # return render_template('404.html')
 
     return render_template('model.html', 
                             url=url,
@@ -100,11 +114,23 @@ def upload():
 
     with open(label_path, 'wb') as label_file:
         pickle.dump(label_list, label_file)
-    
+
+    docker_client.images.build(path=".", tag=uuid, buildargs={'model': uuid})
+    docker_client.containers.run(uuid, detach=True, name=uuid)
+
+    ip = subprocess.check_output(
+        ["docker", "inspect", "-f", "'{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}'", str(uuid)],
+        shell=False
+    )
+
+    ip = ip.decode('utf-8').rstrip()
+    print(ip)
+    ip_dict[uuid] = ip
+
     # TODO: Instantiate model container
     return redirect(url_for('index'))
 
-def load_result(uuid):
+def load_result(uuid, img_file):
     """ Given a UUID, returns the corresponding result JSON.
         Returns: JSON on success, None on failure
     """
@@ -114,7 +140,12 @@ def load_result(uuid):
         desc = model["description"]
         output = "test"
 
-    return (name, desc, output)
+    model_ip = ip_dict[uuid]
+    model_endpoint = "{}:5001/get_prediction".format(model_ip)
+
+    r = requests.post(model_endpoint, files={'file': img_file})
+
+    return (name, desc, r)
 
     # TODO
 
