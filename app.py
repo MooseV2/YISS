@@ -48,7 +48,7 @@ def model(uuid):
     :return: model.html template, or 404.html on error
     """
     uuid = str(uuid)
-    url = "138.197.172.21/models"
+    url = "yourinference.ml/models"
     # try:
     post = request.method == 'POST'
 
@@ -175,4 +175,4 @@ def load_result(uuid, post, img_file=None):
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000) # Start the server
+    app.run(host='yourinference.ml', port=80)  # Start the server
