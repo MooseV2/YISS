@@ -25,7 +25,7 @@
               <div class="ui segment">
                 <div class="header">
                   <h3>Input</h3>
-                </div><img src="{{ url_for('images',filename='demo-{{ uuid }}.jpg') }}" width="100%">
+                </div><img src="/images/demo-{{ uuid }}.jpg" width="100%">
               </div>
             </div>
             <div class="column">
@@ -41,7 +41,10 @@
         <div class="ui raised segment">
           <div class="ui label orange big ribbon">API Call</div><br><br>
           <p>Simply send a POST request to this URL</p>
-          <div class="ui message">curl -F "file=@arst.jpg" http://localhost:5000/models/{{ uuid }}</div>
+          <div class="ui message">
+            <p>curl -F "file=@image.jpg" \</p>
+            <p>  http://{{ url }}/{{ uuid }}</p>
+          </div>
         </div><br><br>
       </div>
     </div>

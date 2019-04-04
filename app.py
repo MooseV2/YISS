@@ -1,9 +1,12 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, send_from_directory
 import os
 from uuid import uuid4
 from threading import Thread
+import shelve
+from flask_uuid import FlaskUUID
 import glob # TODO: Remove after proper gallery retreival
 app = Flask(__name__)
+FlaskUUID(app)
 
 @app.route('/')
 def index():
@@ -11,30 +14,37 @@ def index():
     Renders the default page for uploading images
     :return: index.html template
     """
-    uuids = [x.split('/')[1] for x in glob.glob('models/*')]
-    model_info = {uuid:"name" for uuid in uuids}
+    with shelve.open("persistent_data") as db:
+        model_info = {k:v["name"] for (k,v) in db.items()}
 
     return render_template('index.html', gallery=model_info)
 
+@app.route('/images/<path:path>')
+def send_image(path):
+    return send_from_directory('images', path)
 
-@app.route('/model/<uuid>')
+@app.route('/models/<uuid>/')
 def model(uuid):
     """
     Renders the results page with the analysis JSON data
     :param uuid: The UUID of the results page
     :return: model.html template, or 404.html on error
     """
-    result = load_result(uuid)
-    if result is None: # UUID wasn't found, throw 404
-        return render_template('404.html')
+    uuid = str(uuid)
+    url = "localhost:5000/models"
+    try:
+        name, desc, output = load_result(uuid)
+    except: # UUID wasn't found, throw 404
+        return '404 :('
+        # TODO: 404.html
+        # return render_template('404.html')
 
-    return render_template('result.html', filename=result["filename"],
-                           details=result["exif"],
-                           classification=result["labels"],
-                           before=result["before"],
-                           after=result["after"],
-                           timestamp=result["timestamp"])
-
+    return render_template('model.html', 
+                            url=url,
+                            name=name, 
+                            description=desc, 
+                            output=output, 
+                            uuid=uuid)
 
 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -60,23 +70,37 @@ def upload():
         return traceback.print_exc()
 
     # Otherwise, save the file
-    new_filename = str(uuid4())
+    uuid = str(uuid4())[:8]
     
-    thumb_path = os.path.join('images', f'thumb-{new_filename}.jpg')
+    thumb_path = os.path.join('images', f'thumb-{uuid}.jpg')
     thumb.save(thumb_path)
     
-    demo_path = os.path.join('images', f'demo-{new_filename}.jpg')
+    demo_path = os.path.join('images', f'demo-{uuid}.jpg')
     demo.save(demo_path)
 
     # Create directory for model
-    model_dir = os.path.join('models', new_filename)
+    model_dir = os.path.join('models', uuid)
     os.mkdir(model_dir)
     model_path = os.path.join(model_dir, 'model.onnx')
     onnx.save(model_path)
+
+    labels_path = os.path.join(model_dir, 'labels.txt')
+    with open(labels_path, 'w') as f:
+        f.write(labels)
+
+    with shelve.open("persistent_data") as db:
+        db[uuid] = {
+            "onnx": model_path,
+            "name": name,
+            "description": desc,
+            "thumbnail": thumb_path,
+            "demo": demo_path
+        }
+
     
     # TODO: Instantiate model container
     return f"""
-        UUID:\t{new_filename}
+        UUID:\t{uuid}
         <br>Thumbnail:\t{thumb_path}
         <br>Demo:\t{demo_path}
         <br>Model:\t{model_path}
@@ -92,11 +116,19 @@ def upload():
         <br>{desc}
     """
 
-def load_result(uuid, retry=False):
+def load_result(uuid):
     """ Given a UUID, returns the corresponding result JSON.
         Returns: JSON on success, None on failure
     """
-    pass # TODO
+    with shelve.open("persistent_data") as db:
+        model = db[uuid]
+        name = model["name"]
+        desc = model["description"]
+        output = "test"
+
+    return (name, desc, output)
+
+    # TODO
 
 if __name__ == '__main__':
     app.run() # Start the server

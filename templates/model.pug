@@ -27,7 +27,7 @@ html
                             .ui.segment
                                 .header
                                     h3 Input
-                                img(src="{{ url_for(\'images\',filename=\'demo-{{ uuid }}.jpg\') }}" width="100%")
+                                img(src="/images/demo-{{ uuid }}.jpg" width="100%")
                         .column
                             .ui.segment
                                 .header
@@ -40,6 +40,7 @@ html
                     br
                     p Simply send a POST request to this URL
                     .ui.message
-                        | curl -F "file=@arst.jpg" http://localhost:5000/models/{{ uuid }}
+                        p curl -F "file=@image.jpg" \
+                        p   http://{{ url }}/{{ uuid }}
                 br
                 br
