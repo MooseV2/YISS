@@ -2,10 +2,14 @@ import onnxruntime as rt
 from PIL import Image
 from flask import Flask, request, Response
 import numpy as np
+import pickle
 
 app = Flask(__name__)
 
-sess = rt.InferenceSession("../models/vgg19/model.onnx")
+sess = rt.InferenceSession("/home/model/model.onnx")
+
+with open("/home/model/labels.p", "rb") as f:
+    labels = pickle.load(f)
 
 input_shape = sess.get_inputs()[0].shape[1:]
 output_shape = sess.get_outputs()[0].shape[-1]
@@ -18,8 +22,8 @@ def preprocess_img(image):
     elif input_shape[0] == 3:
         img = image.convert("RGB")
 
-        b, g, r = img.split()
-        img = Image.merge("RGB", (r, g, b))
+        # b, g, r = img.split()
+        # img = Image.merge("RGB", (r, g, b))
     else:
         raise AttributeError("Invalid number of image channels for model input layer")
 
@@ -32,10 +36,11 @@ def preprocess_img(image):
     img_array = img_array.reshape([input_shape[0], input_shape[1], input_shape[2]])
 
     if input_shape[0] == 1:
-        img_array /= 255
-    elif input_shape[0] == 3:
-        # img_array = img_array[::-1, ...]
+        img_array /= 255 if input_shape[1] == 28 else 1
 
+    elif input_shape[0] == 3:
+        print(img_array.ndim)
+        img_array = img_array[::-1, ...]
         mean = [103.939, 116.779, 123.68]
 
         img_array[0, :, :] -= mean[0]
@@ -70,4 +75,4 @@ def get_prediction():
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5001)

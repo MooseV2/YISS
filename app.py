@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, send_from_directory
 import os
 from uuid import uuid4
+import pickle
 from threading import Thread
 import shelve
 from flask_uuid import FlaskUUID
@@ -84,10 +85,6 @@ def upload():
     model_path = os.path.join(model_dir, 'model.onnx')
     onnx.save(model_path)
 
-    labels_path = os.path.join(model_dir, 'labels.txt')
-    with open(labels_path, 'w') as f:
-        f.write(labels)
-
     with shelve.open("persistent_data") as db:
         db[uuid] = {
             "onnx": model_path,
@@ -97,6 +94,11 @@ def upload():
             "demo": demo_path
         }
 
+    label_path = os.path.join(model_dir, 'label.p')
+    label_list = labels.split(', ')
+
+    with open(label_path, 'wb') as label_file:
+        pickle.dump(label_list, label_file)
     
     # TODO: Instantiate model container
     return f"""
