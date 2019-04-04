@@ -43,7 +43,7 @@ def model(uuid):
     :return: model.html template, or 404.html on error
     """
     uuid = str(uuid)
-    url = "localhost/models"
+    url = "138.197.172.21/models"
     # try:
     post = request.method == 'POST'
 
@@ -143,7 +143,7 @@ def load_result(uuid, post, img_file=None):
 
     if type(uuid) is bytes:
         uuid = uuid.decode('utf-8')
-        
+
     with shelve.open("persistent_data") as db:
         model = db[uuid]
         name = model["name"]
@@ -165,4 +165,4 @@ def load_result(uuid, post, img_file=None):
     # TODO
 
 if __name__ == '__main__':
-    app.run() # Start the server
+    app.run(host='0.0.0.0', port=5000) # Start the server
