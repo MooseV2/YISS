@@ -9,9 +9,11 @@ import requests
 from flask import Flask, render_template, request, send_from_directory, redirect, url_for
 from flask_uuid import FlaskUUID
 
+HOST_IP = 'yourinference.ml'
+HOST_PORT = '80'
+
 app = Flask(__name__)
 FlaskUUID(app)
-
 
 docker_client = docker.from_env()
 
@@ -48,7 +50,7 @@ def model(uuid):
     :return: model.html template, or 404.html on error
     """
     uuid = str(uuid)
-    url = "yourinference.ml/models"
+    url = "{}:{}/models".format(HOST_IP, HOST_PORT)
     # try:
     post = request.method == 'POST'
 
@@ -175,4 +177,4 @@ def load_result(uuid, post, img_file=None):
 
 
 if __name__ == '__main__':
-    app.run(host='yourinference.ml', port=80)  # Start the server
+    app.run(host=HOST_IP, port=HOST_PORT)  # Start the server
