@@ -24,5 +24,10 @@ HOST_PORT = '8080'  # use port 80 if hosting online
 python app.py
 ```
 
+The MNIST model is a good place to start. The onnx file can be found here:
+https://github.com/onnx/models/tree/master/mnist
+
+The dataset for MNIST can be downloaded from https://www.kaggle.com/scolianni/mnistasjpg
+
 Please note that the first model uploaded will take a while to build the container
 as the docker images would not be cached.
